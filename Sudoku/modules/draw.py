@@ -2,7 +2,7 @@
 import pygame as pyg
 
 # Draw function
-def draw(WINDOW, size, mouse, board, s_board, square_size, base, counts, submit):
+def draw(WINDOW, size, mouse, board, s_board, square_size, base, counts, submit, difficulty):
     # Unpack variables
     WIDTH, HEIGHT = size
 
@@ -122,10 +122,13 @@ def draw(WINDOW, size, mouse, board, s_board, square_size, base, counts, submit)
     WINDOW.blit(text_font.render("Clicking on any of the color boxes above will color all selected tiles, with the leftmost box resetting all colors.", True, white), (22 + (base ** 2 + 1) * square_size, 210))
     WINDOW.blit(text_font.render("You can enter in numbers using the keyboard, and if you are holding shift while doing so, you will add a note to that cell.", True, white), (22 + (base ** 2 + 1) * square_size, 250))
     WINDOW.blit(text_font.render("Pressing backspace will remove any inserted numbers, with backspace+shift removing the notes as well.", True, white), (22 + (base ** 2 + 1) * square_size, 275))
-    WINDOW.blit(text_font.render("Below the board is a list of the numbers and these will be grayed out if you have 9 (or more)", True, white), (22 + (base ** 2 + 1) * square_size, 315))
-    WINDOW.blit(text_font.render("instances of that number in the board.", True, white), (22 + (base ** 2 + 1) * square_size, 340))
+    WINDOW.blit(text_font.render("Below the board is a list of the numbers and these will be grayed out if you have 9 (or more) instanecs of that", True, white), (22 + (base ** 2 + 1) * square_size, 315))
+    WINDOW.blit(text_font.render("number in the board, which you can click on to select said instances.", True, white), (22 + (base ** 2 + 1) * square_size, 340))
     WINDOW.blit(text_font.render("Once you are satisfied with your solution, click the green \"Submit\" button to check if your board is correct.", True, white), (22 + (base ** 2 + 1) * square_size, 380))
     WINDOW.blit(text_font.render("Any cells with green numbers were correct, any with white were what you were given, and any that are red were incorrect.", True, white), (22 + (base ** 2 + 1) * square_size, 405))
     WINDOW.blit(text_font.render("Happy Sudoko-ing!", True, white), (22 + (base ** 2 + 1) * square_size, 440))
+
+    WINDOW.blit(text_font.render("Difficulty (percentage of squares empty): " + str(round(difficulty*100)/100), True, white), (22 + (base ** 2 + 1) * square_size, 500))
+    WINDOW.blit(text_font.render("Press the up/down arrows to increase/decrease the difficulty, respectively", True, white), (22 + (base ** 2 + 1) * square_size, 525))
 
     pyg.display.update()

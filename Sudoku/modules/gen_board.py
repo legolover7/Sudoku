@@ -29,7 +29,7 @@ def generate(base, percentage=1):
     for i in range(base ** 4 - int(percentage * base ** 4)):
         x = random.randint(0, base ** 2-1)
         y = random.randint(0, base ** 2-1)
-        while board[x][y] == "":
+        while board[x][y][0] == "":
             x = random.randint(0, base ** 2-1)
             y = random.randint(0, base ** 2-1)
         board[x][y][0] = ""

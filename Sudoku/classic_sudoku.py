@@ -38,7 +38,6 @@ FPS = 60
 
 # Difficulty thresholds:
 # 0.5 = Easy
-difficulty = 0.4
 base = 3
 square_size = 60
 
@@ -47,18 +46,13 @@ def Main():
     # Global variables
     global WINDOW, WIDTH, HEIGHT, FPS
     
-    game_board, solved_board, counts = Generate_Board()
-    submit = False
-
     # Local variables
     mouse_pos = (0, 0)
-    counts = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    for x in range(base ** 2):
-        for y in range(base ** 2):
-            if game_board[x][y][0] != "":
-                val = int(game_board[x][y][0])
-                if 1 <= val <= 9:
-                    counts[val-1] += 1
+    difficulty = 0.4
+
+    # Generate boards
+    game_board, solved_board, counts = Generate_Board(difficulty)
+    submit = False
 
     clock = pyg.time.Clock()
     while True:
@@ -76,6 +70,8 @@ def Main():
             # Key pressed
             elif event.type == pyg.KEYDOWN:
                 key = event.key
+                if 1073741913 <= key <= 1073741922:
+                    key -= 1073741913 - 49
                 # Exit key
                 if key == pyg.K_F1:
                     pyg.quit()
@@ -83,7 +79,7 @@ def Main():
 
                 # Reset
                 elif key == pyg.K_F5:
-                    game_board, solved_board, counts = Generate_Board()
+                    game_board, solved_board, counts = Generate_Board(difficulty)
                     submit = False
 
                 # Clear selected cells
@@ -97,8 +93,6 @@ def Main():
                                 counts[int(val)-1] -= 1
                             if game_board[x][y][1] and shift:
                                 game_board[x][y][3] = []
-                            
-
 
                 # Num keys
                 elif 49 <= key <= 57 and not submit:
@@ -118,12 +112,19 @@ def Main():
                                     game_board[x][y][3] += [num]
                                 elif game_board[x][y][1] and num in game_board[x][y][3]:
                                     game_board[x][y][3].remove(num)
+
+                # Arrow keys
+                elif key == pyg.K_UP:
+                    difficulty = min(0.9, difficulty + 0.01)
+                elif key == pyg.K_DOWN:
+                    difficulty = max(0.05, difficulty - 0.01)
                     
             
             elif event.type == pyg.MOUSEBUTTONDOWN and event.button == 1:
+                # Submit/reset button
                 if 22 + (square_size * base ** 2) / 2 - 150 <= mouse_pos[0] <= 22 + (square_size * base ** 2) / 2 + 150 and square_size * (base ** 2 + 2) <= mouse_pos[1] <= square_size * (base ** 2 + 2) + 30:
                     if submit:
-                        game_board, solved_board, counts = Generate_Board()
+                        game_board, solved_board, counts = Generate_Board(difficulty)
                         submit = False
                     else:
                         submit = True
@@ -146,6 +147,15 @@ def Main():
                                     game_board[x][y][1] = True
 
                         game_board[tile_x][tile_y][1] = True
+
+                    elif tile_x < base ** 2 and tile_y == base ** 2:
+                        print(tile_x, tile_y)
+                        for x in range(base**2):
+                            for y in range(base ** 2):  
+                                if game_board[x][y][0] == tile_x + 1:
+                                    game_board[x][y][1] = True
+                                else:
+                                    game_board[x][y][1] = False         
                     
                     # Clear all
                     elif tile_x == base ** 2 + 1 and tile_y == 0:
@@ -164,12 +174,10 @@ def Main():
                                     game_board[x][y][2] = color
 
         
-            draw.draw(WINDOW, (WIDTH, HEIGHT), mouse_pos, game_board, solved_board, square_size, base, counts, submit)
+            draw.draw(WINDOW, (WIDTH, HEIGHT), mouse_pos, game_board, solved_board, square_size, base, counts, submit, difficulty)
         clock.tick(FPS)
 
-
-
-def Generate_Board():
+def Generate_Board(difficulty):
     game_board, solved_board = gen.generate(3, difficulty)
 
     counts = [0, 0, 0, 0, 0, 0, 0, 0, 0]
