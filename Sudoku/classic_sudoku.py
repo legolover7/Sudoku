@@ -103,6 +103,8 @@ def Main():
                                 if game_board[x][y][1] and type(game_board[x][y][0]) != int:
                                     game_board[x][y][0] = num
                                     counts[int(num)-1] += 1
+                                if str(game_board[x][y][0]) == num:
+                                    game_board[x][y][1] = True
 
                     # Notes
                     elif shift:
@@ -149,13 +151,10 @@ def Main():
                         game_board[tile_x][tile_y][1] = True
 
                     elif tile_x < base ** 2 and tile_y == base ** 2:
-                        print(tile_x, tile_y)
                         for x in range(base**2):
                             for y in range(base ** 2):  
                                 if game_board[x][y][0] == tile_x + 1:
-                                    game_board[x][y][1] = True
-                                else:
-                                    game_board[x][y][1] = False         
+                                    game_board[x][y][1] = True        
                     
                     # Clear all
                     elif tile_x == base ** 2 + 1 and tile_y == 0:
